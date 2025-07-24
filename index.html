@@ -1,0 +1,2204 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Management System - যানবাহন ব্যবস্থাপনা সিস্টেম</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-color: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #06b6d4;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            
+            --border-color: #e2e8f0;
+            --border-light: #f1f5f9;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        
+        .dark {
+            --bg-primary: #1e293b;
+            --bg-secondary: #334155;
+            --bg-tertiary: #475569;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            
+            --border-color: #475569;
+            --border-light: #64748b;
+        }
+        
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans Bengali', 'Inter', sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .flex-col {
+            flex-direction: column;
+        }
+        
+        .items-center {
+            align-items: center;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .justify-center {
+            justify-content: center;
+        }
+        
+        .gap-2 {
+            gap: 0.5rem;
+        }
+        
+        .gap-4 {
+            gap: 1rem;
+        }
+        
+        .mt-4 {
+            margin-top: 1rem;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+        
+        .p-4 {
+            padding: 1rem;
+        }
+        
+        .p-6 {
+            padding: 1.5rem;
+        }
+        
+        .rounded {
+            border-radius: 0.5rem;
+        }
+        
+        .shadow {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .w-full {
+            width: 100%;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.25rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            gap: 0.5rem;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+        }
+        
+        .btn-lg {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .form-input {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+        }
+        
+        .form-select {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        
+        .form-error {
+            color: var(--danger-color);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* Cards */
+        .card {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-tertiary);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-tertiary);
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(25%, -25%);
+        }
+        
+        .stats-card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+        
+        .stats-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stats-card-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        
+        /* Tables */
+        .table-container {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .table th {
+            background-color: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .table tbody tr:hover {
+            background-color: var(--bg-secondary);
+        }
+        
+        /* Navigation */
+        .navbar {
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .navbar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background-color: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            padding: 1rem;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 100;
+            overflow-y: auto;
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Login Page */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem;
+        }
+        
+        .login-card {
+            background-color: var(--bg-primary);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-logo {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .demo-credentials {
+            background-color: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.75rem;
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: var(--bg-primary);
+            border-radius: 0.5rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            border: 1px solid;
+        }
+        
+        .alert-success {
+            background-color: #dcfce7;
+            border-color: #bbf7d0;
+            color: #166534;
+        }
+        
+        .alert-danger {
+            background-color: #fef2f2;
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+        
+        .alert-warning {
+            background-color: #fffbeb;
+            border-color: #fde68a;
+            color: #92400e;
+        }
+        
+        .alert-info {
+            background-color: #ecfeff;
+            border-color: #a5f3fc;
+            color: #0e7490;
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar-nav {
+                display: none;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            .sidebar,
+            .navbar,
+            .theme-toggle {
+                display: none !important;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+                padding: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle btn btn-outline btn-sm no-print" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-car"></i>
+                </div>
+                <h2>যানবাহন ব্যবস্থাপনা সিস্টেম</h2>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">Vehicle Management System</p>
+            </div>
+
+            <div class="demo-credentials">
+                <strong>ডেমো লগইন তথ্য:</strong><br>
+                <small>
+                    সুপার অ্যাডমিন: ১২৩৪৫৬৭৮৯০ / ১২৩৪৫৬<br>
+                    ম্যানেজার: ১২৩৪৫৬৭৮৯১ / ১২৩৪৫৬<br>
+                    ব্যবহারকারী: ১২৩৪৫৬৭৮৯২ / ১২৩৪৫৬
+                </small>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">মোবাইল নম্বর (০ ছাড়া)</label>
+                    <input type="tel" id="mobile" class="form-input" placeholder="১২৩৪৫৬৭৮৯০" required maxlength="11">
+                    <div class="form-error" id="mobileError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">পাসওয়ার্ড (৬ ডিজিট)</label>
+                    <div style="position: relative;">
+                        <input type="password" id="password" class="form-input" placeholder="১২৩৪৫৬" required maxlength="6">
+                        <button type="button" onclick="togglePasswordVisibility()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                            <i class="fas fa-eye" id="passwordToggle"></i>
+                        </button>
+                    </div>
+                    <div class="form-error" id="passwordError"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full" id="loginBtn">
+                    <span id="loginText">লগইন</span>
+                    <span id="loginSpinner" class="spinner hidden"></span>
+                </button>
+            </form>
+
+            <div id="loginAlert" class="hidden"></div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="hidden">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">VMS</div>
+                <button onclick="closeSidebar()" class="btn btn-outline btn-sm">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="p-4" style="border-bottom: 1px solid var(--border-color); margin-bottom: 1rem;">
+                <div class="flex items-center gap-2">
+                    <div style="width: 40px; height: 40px; background-color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;" id="sidebarUserName">ব্যবহারকারী</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);" id="sidebarUserRole">user</div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="sidebar-nav" id="sidebarNav">
+                <!-- Navigation items will be populated by JavaScript -->
+            </ul>
+
+            <div style="position: absolute; bottom: 1rem; left: 1rem; right: 1rem;">
+                <button onclick="logout()" class="btn btn-danger w-full">
+                    <i class="fas fa-sign-out-alt"></i>
+                    লগআউট
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navigation -->
+            <div class="navbar no-print">
+                <div class="container">
+                    <div class="navbar-content">
+                        <div class="flex items-center gap-4">
+                            <button onclick="toggleSidebar()" class="btn btn-outline btn-sm">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <h1 id="pageTitle">ড্যাশবোর্ড</h1>
+                        </div>
+                        <div class="navbar-nav">
+                            <span id="currentUser">ব্যবহারকারী</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Content -->
+            <div class="container">
+                <!-- Dashboard Page -->
+                <div id="dashboardPage" class="page">
+                    <div class="stats-grid">
+                        <div class="stats-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                            <div class="stats-card-icon"><i class="fas fa-dollar-sign"></i></div>
+                            <div class="stats-card-value" id="totalSales">০</div>
+                            <div class="stats-card-label">মোট বিক্রয়</div>
+                        </div>
+                        <div class="stats-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                            <div class="stats-card-icon"><i class="fas fa-clock"></i></div>
+                            <div class="stats-card-value" id="totalDue">০</div>
+                            <div class="stats-card-label">মোট বাকি</div>
+                        </div>
+                        <div class="stats-card" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                            <div class="stats-card-icon"><i class="fas fa-credit-card"></i></div>
+                            <div class="stats-card-value" id="totalCost">০</div>
+                            <div class="stats-card-label">মোট খরচ</div>
+                        </div>
+                        <div class="stats-card" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
+                            <div class="stats-card-icon"><i class="fas fa-money-bill"></i></div>
+                            <div class="stats-card-value" id="totalCash">০</div>
+                            <div class="stats-card-label">মোট নগদ</div>
+                        </div>
+                        <div class="stats-card" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                            <div class="stats-card-icon"><i class="fas fa-car"></i></div>
+                            <div class="stats-card-value" id="totalAuto">০</div>
+                            <div class="stats-card-label">মোট অটো</div>
+                        </div>
+                        <div class="stats-card" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);">
+                            <div class="stats-card-icon"><i class="fas fa-users"></i></div>
+                            <div class="stats-card-value" id="totalUsers">০</div>
+                            <div class="stats-card-label">মোট ব্যবহারকারী</div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>সর্বশেষ বিক্রয়</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-container">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>ব্যবহারকারী</th>
+                                                <th>পরিমাণ</th>
+                                                <th>তারিখ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recentSalesTable">
+                                            <!-- Data will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>সর্বশেষ খরচ</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-container">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>ধরন</th>
+                                                <th>পরিমাণ</th>
+                                                <th>তারিখ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recentCostsTable">
+                                            <!-- Data will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sales Page -->
+                <div id="salesPage" class="page hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2>বিক্রয় ব্যবস্থাপনা</h2>
+                        <button onclick="showAddSaleModal()" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            নতুন বিক্রয়
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>আইডি</th>
+                                            <th>ব্যবহারকারী</th>
+                                            <th>ড্রাইভার</th>
+                                            <th>চার্জের ধরন</th>
+                                            <th>চার্জ</th>
+                                            <th>বাকি</th>
+                                            <th>আদায়</th>
+                                            <th>মোট বাকি</th>
+                                            <th>তারিখ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="salesTable">
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Page -->
+                <div id="usersPage" class="page hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2>ব্যবহারকারী ব্যবস্থাপনা</h2>
+                        <button onclick="showAddUserModal()" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            নতুন ব্যবহারকারী
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>আইডি</th>
+                                            <th>নাম</th>
+                                            <th>মোবাইল</th>
+                                            <th>ভূমিকা</th>
+                                            <th>এনআইডি</th>
+                                            <th>মোট বকেয়া</th>
+                                            <th>স্ট্যাটাস</th>
+                                            <th>কর্ম</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTable">
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Costs Page -->
+                <div id="costsPage" class="page hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2>খরচ ব্যবস্থাপনা</h2>
+                        <button onclick="showAddCostModal()" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            নতুন খরচ
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>আইডি</th>
+                                            <th>ধরন</th>
+                                            <th>পরিমাণ</th>
+                                            <th>বিবরণ</th>
+                                            <th>তারিখ</th>
+                                            <th>যোগকারী</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="costsTable">
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Page -->
+                <div id="profilePage" class="page hidden">
+                    <h2>প্রোফাইল</h2>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>ব্যক্তিগত তথ্য</h3>
+                            </div>
+                            <div class="card-body" id="userProfileInfo">
+                                <!-- User profile info will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>লেনদেনের ইতিহাস</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-container">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>আইডি</th>
+                                                <th>ড্রাইভার</th>
+                                                <th>ধরন</th>
+                                                <th>পরিমাণ</th>
+                                                <th>তারিখ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="userTransactionsTable">
+                                            <!-- Transactions will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Page -->
+                <div id="reportsPage" class="page hidden">
+                    <h2>রিপোর্ট</h2>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3>রিপোর্ট তৈরি করুন</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="reportForm" class="flex gap-4 items-end">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">শুরুর তারিখ</label>
+                                    <input type="date" id="reportStartDate" class="form-input" required>
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">শেষ তারিখ</label>
+                                    <input type="date" id="reportEndDate" class="form-input" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-chart-bar"></i>
+                                    রিপোর্ট তৈরি
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div id="reportResults" class="hidden">
+                        <!-- Report results will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="settingsPage" class="page hidden">
+                    <h2>সেটিংস</h2>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>পাসওয়ার্ড পরিবর্তন</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="passwordForm" style="max-width: 400px;">
+                                <div class="form-group">
+                                    <label class="form-label">বর্তমান পাসওয়ার্ড</label>
+                                    <input type="password" id="currentPassword" class="form-input" required maxlength="6">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">নতুন পাসওয়ার্ড</label>
+                                    <input type="password" id="newPassword" class="form-input" required maxlength="6">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">পাসওয়ার্ড নিশ্চিত করুন</label>
+                                    <input type="password" id="confirmPassword" class="form-input" required maxlength="6">
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-key"></i>
+                                    পাসওয়ার্ড পরিবর্তন
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Sale Modal -->
+    <div class="modal" id="addSaleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>নতুন বিক্রয় যোগ করুন</h3>
+                <button onclick="closeModal('addSaleModal')" class="btn btn-outline btn-sm">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addSaleForm">
+                    <div class="form-group">
+                        <label class="form-label">ব্যবহারকারী</label>
+                        <select id="saleUserId" class="form-select" required>
+                            <option value="">ব্যবহারকারী নির্বাচন করুন</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ড্রাইভার</label>
+                        <div class="flex gap-2">
+                            <select id="saleDriverId" class="form-select" required style="flex: 1;">
+                                <option value="">ড্রাইভার নির্বাচন করুন</option>
+                            </select>
+                            <button type="button" onclick="showAddDriverModal()" class="btn btn-secondary">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">চার্জের ধরন</label>
+                        <select id="saleChargeType" class="form-select" required>
+                            <option value="">নির্বাচন করুন</option>
+                            <option value="chargeBill">চার্জ বিল</option>
+                            <option value="noChargeBill">নো চার্জ বিল</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">চার্জের পরিমাণ</label>
+                        <input type="number" id="saleChargeAmount" class="form-input" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">বাকি</label>
+                        <input type="number" id="saleDueAmount" class="form-input" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">বাকি আদায়</label>
+                        <input type="number" id="saleDueCollection" class="form-input" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">মোট বকেয়া</label>
+                        <input type="number" id="saleTotalDue" class="form-input" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('addSaleModal')" class="btn btn-secondary">বাতিল</button>
+                <button onclick="submitSale()" class="btn btn-primary">সংরক্ষণ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>নতুন ব্যবহারকারী যোগ করুন</h3>
+                <button onclick="closeModal('addUserModal')" class="btn btn-outline btn-sm">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm">
+                    <div class="form-group">
+                        <label class="form-label">নাম</label>
+                        <input type="text" id="userName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">মোবাইল নম্বর (০ ছাড়া)</label>
+                        <input type="tel" id="userMobile" class="form-input" required maxlength="11">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">পাসওয়ার্ড (৬ ডিজিট)</label>
+                        <input type="password" id="userPassword" class="form-input" maxlength="6" placeholder="মোবাইল নম্বরের শেষ ৬ ডিজিট">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ভূমিকা</label>
+                        <select id="userRole" class="form-select" required>
+                            <option value="user">ব্যবহারকারী</option>
+                            <option value="manager">ম্যানেজার</option>
+                            <option value="superadmin">সুপার অ্যাডমিন</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">এনআইডি নম্বর</label>
+                        <input type="text" id="userNidNo" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">জন্ম তারিখ</label>
+                        <input type="date" id="userDateOfBirth" class="form-input">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('addUserModal')" class="btn btn-secondary">বাতিল</button>
+                <button onclick="submitUser()" class="btn btn-primary">সংরক্ষণ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Cost Modal -->
+    <div class="modal" id="addCostModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>নতুন খরচ যোগ করুন</h3>
+                <button onclick="closeModal('addCostModal')" class="btn btn-outline btn-sm">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addCostForm">
+                    <div class="form-group">
+                        <label class="form-label">খরচের ধরন</label>
+                        <select id="costType" class="form-select" required>
+                            <option value="">নির্বাচন করুন</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">পরিমাণ</label>
+                        <input type="number" id="costAmount" class="form-input" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">বিবরণ</label>
+                        <textarea id="costDescription" class="form-input" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('addCostModal')" class="btn btn-secondary">বাতিল</button>
+                <button onclick="submitCost()" class="btn btn-primary">সংরক্ষণ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Driver Modal -->
+    <div class="modal" id="addDriverModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>নতুন ড্রাইভার যোগ করুন</h3>
+                <button onclick="closeModal('addDriverModal')" class="btn btn-outline btn-sm">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addDriverForm">
+                    <div class="form-group">
+                        <label class="form-label">ড্রাইভারের নাম</label>
+                        <input type="text" id="driverName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">মোবাইল নম্বর</label>
+                        <input type="tel" id="driverMobile" class="form-input">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('addDriverModal')" class="btn btn-secondary">বাতিল</button>
+                <button onclick="submitDriver()" class="btn btn-primary">সংরক্ষণ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let currentUser = null;
+        let isDarkMode = false;
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            // Check for saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                isDarkMode = savedTheme === 'dark';
+                updateTheme();
+            }
+
+            // Set up form handlers
+            setupFormHandlers();
+            
+            // Load initial data
+            loadCostTypes();
+        }
+
+        function setupFormHandlers() {
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Mobile number formatting
+            document.getElementById('mobile').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.startsWith('0')) {
+                    value = value.substring(1);
+                }
+                if (value.length > 11) {
+                    value = value.substring(0, 11);
+                }
+                e.target.value = value;
+            });
+
+            // Password formatting
+            document.getElementById('password').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 6) {
+                    value = value.substring(0, 6);
+                }
+                e.target.value = value;
+            });
+
+            // Report form
+            document.getElementById('reportForm').addEventListener('submit', handleGenerateReport);
+
+            // Password change form
+            document.getElementById('passwordForm').addEventListener('submit', handlePasswordChange);
+
+            // Sale due calculation
+            ['saleDueAmount', 'saleDueCollection'].forEach(id => {
+                document.getElementById(id).addEventListener('input', calculateTotalDue);
+            });
+        }
+
+        // Authentication Functions
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const mobile = document.getElementById('mobile').value;
+            const password = document.getElementById('password').value;
+            
+            if (!mobile || !password) {
+                showAlert('মোবাইল নম্বর এবং পাসওয়ার্ড আবশ্যক', 'danger');
+                return;
+            }
+
+            setLoading('loginBtn', true);
+
+            try {
+                const result = await callGoogleScript('authenticateUser', [mobile, password]);
+                
+                if (result.success) {
+                    currentUser = result.user;
+                    showMainApp();
+                    loadDashboard();
+                    showAlert(result.message, 'success');
+                } else {
+                    showAlert(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('লগইন করতে সমস্যা হয়েছে', 'danger');
+            }
+
+            setLoading('loginBtn', false);
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            clearForms();
+            showAlert('সফলভাবে লগআউট হয়েছে', 'success');
+        }
+
+        function showMainApp() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            
+            // Update user info
+            document.getElementById('currentUser').textContent = currentUser.name;
+            document.getElementById('sidebarUserName').textContent = currentUser.name;
+            document.getElementById('sidebarUserRole').textContent = currentUser.role;
+            
+            // Setup navigation
+            setupNavigation();
+            
+            // Show appropriate page based on role
+            if (currentUser.role === 'user') {
+                showPage('profile');
+            } else if (currentUser.role === 'manager') {
+                showPage('sales');
+            } else {
+                showPage('dashboard');
+            }
+        }
+
+        function setupNavigation() {
+            const nav = document.getElementById('sidebarNav');
+            nav.innerHTML = '';
+
+            const navItems = [];
+
+            if (currentUser.role === 'superadmin') {
+                navItems.push(
+                    {name: 'ড্যাশবোর্ড', page: 'dashboard', icon: 'fas fa-home'},
+                    {name: 'বিক্রয়', page: 'sales', icon: 'fas fa-shopping-cart'},
+                    {name: 'খরচ', page: 'costs', icon: 'fas fa-credit-card'},
+                    {name: 'ব্যবহারকারী', page: 'users', icon: 'fas fa-users'},
+                    {name: 'রিপোর্ট', page: 'reports', icon: 'fas fa-chart-bar'},
+                    {name: 'প্রোফাইল', page: 'profile', icon: 'fas fa-user'},
+                    {name: 'সেটিংস', page: 'settings', icon: 'fas fa-cog'}
+                );
+            } else if (currentUser.role === 'manager') {
+                navItems.push(
+                    {name: 'বিক্রয়', page: 'sales', icon: 'fas fa-shopping-cart'},
+                    {name: 'খরচ', page: 'costs', icon: 'fas fa-credit-card'},
+                    {name: 'প্রোফাইল', page: 'profile', icon: 'fas fa-user'},
+                    {name: 'সেটিংস', page: 'settings', icon: 'fas fa-cog'}
+                );
+            } else {
+                navItems.push(
+                    {name: 'প্রোফাইল', page: 'profile', icon: 'fas fa-user'},
+                    {name: 'সেটিংস', page: 'settings', icon: 'fas fa-cog'}
+                );
+            }
+
+            navItems.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <a href="#" onclick="showPage('${item.page}')" data-page="${item.page}">
+                        <i class="${item.icon}"></i>
+                        ${item.name}
+                    </a>
+                `;
+                nav.appendChild(li);
+            });
+        }
+
+        // Page Navigation
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+
+            // Show selected page
+            const page = document.getElementById(pageName + 'Page');
+            if (page) {
+                page.classList.remove('hidden');
+                
+                // Update page title
+                const titles = {
+                    dashboard: 'ড্যাশবোর্ড',
+                    sales: 'বিক্রয়',
+                    users: 'ব্যবহারকারী',
+                    costs: 'খরচ',
+                    profile: 'প্রোফাইল',
+                    reports: 'রিপোর্ট',
+                    settings: 'সেটিংস'
+                };
+                document.getElementById('pageTitle').textContent = titles[pageName] || pageName;
+
+                // Update active nav
+                document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                    link.classList.remove('active');
+                });
+                const activeLink = document.querySelector(`[data-page="${pageName}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+
+                // Load page data
+                loadPageData(pageName);
+            }
+
+            // Close sidebar on mobile
+            closeSidebar();
+        }
+
+        async function loadPageData(pageName) {
+            try {
+                switch (pageName) {
+                    case 'dashboard':
+                        await loadDashboard();
+                        break;
+                    case 'sales':
+                        await loadSales();
+                        break;
+                    case 'users':
+                        await loadUsers();
+                        break;
+                    case 'costs':
+                        await loadCosts();
+                        break;
+                    case 'profile':
+                        await loadProfile();
+                        break;
+                }
+            } catch (error) {
+                console.error('Error loading page data:', error);
+                showAlert('ডেটা লোড করতে সমস্যা হয়েছে', 'danger');
+            }
+        }
+
+        // Dashboard Functions
+        async function loadDashboard() {
+            try {
+                const result = await callGoogleScript('getDashboardStats');
+                
+                if (result.success) {
+                    const data = result.data;
+                    
+                    // Update stats cards
+                    document.getElementById('totalSales').textContent = formatCurrency(data.totalSales);
+                    document.getElementById('totalDue').textContent = formatCurrency(data.totalDue);
+                    document.getElementById('totalCost').textContent = formatCurrency(data.totalCost);
+                    document.getElementById('totalCash').textContent = formatCurrency(data.totalCash);
+                    document.getElementById('totalAuto').textContent = data.totalAuto;
+                    document.getElementById('totalUsers').textContent = data.totalUsers;
+
+                    // Update recent sales table
+                    const salesTable = document.getElementById('recentSalesTable');
+                    salesTable.innerHTML = '';
+                    data.recentSales.forEach(sale => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${sale.userName}</td>
+                            <td>${formatCurrency(sale.chargeAmount)}</td>
+                            <td>${sale.createdAt}</td>
+                        `;
+                        salesTable.appendChild(row);
+                    });
+
+                    // Update recent costs table
+                    const costsTable = document.getElementById('recentCostsTable');
+                    costsTable.innerHTML = '';
+                    data.recentCosts.forEach(cost => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${cost.type}</td>
+                            <td>${formatCurrency(cost.amount)}</td>
+                            <td>${cost.createdAt}</td>
+                        `;
+                        costsTable.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Dashboard load error:', error);
+            }
+        }
+
+        // Sales Functions
+        async function loadSales() {
+            try {
+                const result = await callGoogleScript('handleApiRequest', ['sales', 'GET', {}, currentUser.id, currentUser.role]);
+                
+                if (result.success) {
+                    const salesTable = document.getElementById('salesTable');
+                    salesTable.innerHTML = '';
+                    
+                    result.data.forEach(sale => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${sale.id}</td>
+                            <td>${sale.userName}</td>
+                            <td>${sale.driverName}</td>
+                            <td>${sale.chargeType === 'chargeBill' ? 'চার্জ বিল' : 'নো চার্জ বিল'}</td>
+                            <td>${formatCurrency(sale.chargeAmount)}</td>
+                            <td>${formatCurrency(sale.dueAmount)}</td>
+                            <td>${formatCurrency(sale.dueCollection)}</td>
+                            <td>${formatCurrency(sale.totalDue)}</td>
+                            <td>${formatDate(sale.createdAt)}</td>
+                        `;
+                        salesTable.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Sales load error:', error);
+            }
+        }
+
+        async function showAddSaleModal() {
+            // Load users and drivers
+            await loadUsersForDropdown();
+            await loadDriversForDropdown();
+            showModal('addSaleModal');
+        }
+
+        async function loadUsersForDropdown() {
+            try {
+                const result = await callGoogleScript('handleApiRequest', ['users', 'GET', {}, currentUser.id, currentUser.role]);
+                
+                if (result.success) {
+                    const select = document.getElementById('saleUserId');
+                    select.innerHTML = '<option value="">ব্যবহারকারী নির্বাচন করুন</option>';
+                    
+                    result.data.forEach(user => {
+                        if (user.role === 'user') {
+                            const option = document.createElement('option');
+                            option.value = user.id;
+                            option.textContent = user.name;
+                            select.appendChild(option);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        async function loadDriversForDropdown() {
+            try {
+                const result = await callGoogleScript('getDrivers');
+                
+                if (result.success) {
+                    const select = document.getElementById('saleDriverId');
+                    select.innerHTML = '<option value="">ড্রাইভার নির্বাচন করুন</option>';
+                    
+                    result.data.forEach(driver => {
+                        const option = document.createElement('option');
+                        option.value = driver.id;
+                        option.textContent = driver.name;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading drivers:', error);
+            }
+        }
+
+        function calculateTotalDue() {
+            const dueAmount = parseFloat(document.getElementById('saleDueAmount').value) || 0;
+            const dueCollection = parseFloat(document.getElementById('saleDueCollection').value) || 0;
+            const totalDue = dueAmount - dueCollection;
+            document.getElementById('saleTotalDue').value = totalDue;
+        }
+
+        async function submitSale() {
+            const formData = {
+                userId: document.getElementById('saleUserId').value,
+                driverId: document.getElementById('saleDriverId').value,
+                chargeType: document.getElementById('saleChargeType').value,
+                chargeAmount: parseFloat(document.getElementById('saleChargeAmount').value) || 0,
+                dueAmount: parseFloat(document.getElementById('saleDueAmount').value) || 0,
+                dueCollection: parseFloat(document.getElementById('saleDueCollection').value) || 0
+            };
+
+            if (!formData.userId || !formData.driverId || !formData.chargeType) {
+                showAlert('সকল আবশ্যক ক্ষেত্র পূরণ করুন', 'danger');
+                return;
+            }
+
+            try {
+                const result = await callGoogleScript('handleApiRequest', ['sales', 'POST', formData, currentUser.id, currentUser.role]);
+                
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    closeModal('addSaleModal');
+                    clearForm('addSaleForm');
+                    loadSales();
+                    if (currentUser.role === 'superadmin') {
+                        loadDashboard();
+                    }
+                } else {
+                    showAlert(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Submit sale error:', error);
+                showAlert('বিক্রয় যোগ করতে সমস্যা হয়েছে', 'danger');
+            }
+        }
+
+        // Users Functions
+        async function loadUsers() {
+            try {
+                const result = await callGoogleScript('handleApiRequest', ['users', 'GET', {}, currentUser.id, currentUser.role]);
+                
+                if (result.success) {
+                    const usersTable = document.getElementById('usersTable');
+                    usersTable.innerHTML = '';
+                    
+                    result.data.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${user.id}</td>
+                            <td>${user.name}</td>
+                            <td>${user.mobile}</td>
+                            <td>${getRoleText(user.role)}</td>
+                            <td>${user.nidNo || '-'}</td>
+                            <td>${formatCurrency(user.totalDue)}</td>
+                            <td>
+                                <span class="badge ${user.isActive ? 'badge-success' : 'badge-danger'}">
+                                    ${user.isActive ? 'সক্রিয়' : 'নিষ্ক্রিয়'}
+                                </span>
+                            </td>
+                            <td>
+                                <button onclick="editUser(${user.id})" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteUser(${user.id})" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        usersTable.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Users load error:', error);
+            }
+        }
+
+        function showAddUserModal() {
+            showModal('addUserModal');
+        }
+
+        async function submitUser() {
+            const formData = {
+                name: document.getElementById('userName').value,
+                mobile: document.getElementById('userMobile').value,
+                password: document.getElementById('userPassword').value,
+                role: document.getElementById('userRole').value,
+                nidNo: document.getElementById('userNidNo').value,
+                dateOfBirth: document.getElementById('userDateOfBirth').value
+            };
+
+            if (!formData.name || !formData.mobile || !formData.role) {
+                showAlert('সকল আবশ্যক ক্ষেত্র পূরণ করুন', 'danger');
+                return;
+            }
+
+            try {
+                const result = await callGoogleScript('handleApiRequest', ['users', 'POST', formData, currentUser.id, currentUser.role]);
+                
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    closeModal('addUserModal');
+                    clearForm('addUserForm');
+                    loadUsers();
+                } else {
+                    showAlert(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Submit user error:', error);
+                showAlert('ব্যবহারকারী যোগ করতে সমস্যা হয়েছে', 'danger');
+            }
+        }
+
+        // Costs Functions
+        async function loadCosts() {
+            try {
+                const result = await callGoogleScript('handleApiRequest', ['costs', 'GET', {}, currentUser.id, currentUser.role]);
+                
+                if (result.success) {
+                    const costsTable = document.getElementById('costsTable');
+                    costsTable.innerHTML = '';
+                    
+                    result.data.forEach(cost => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${cost.id}</td>
+                            <td>${cost.type}</td>
+                            <td>${formatCurrency(cost.amount)}</td>
+                            <td>${cost.description || '-'}</td>
+                            <td>${formatDate(cost.createdAt)}</td>
+                            <td>${cost.createdBy}</td>
+                        `;
+                        costsTable.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Costs load error:', error);
+            }
+        }
+
+        async function loadCostTypes() {
+            try {
+                const result = await callGoogleScript('getCostTypes');
+                
+                if (result.success) {
+                    const select = document.getElementById('costType');
+                    select.innerHTML = '<option value="">নির্বাচন করুন</option>';
+                    
+                    result.data.forEach(type => {
+                        const option = document.createElement('option');
+                        option.value = type.name;
+                        option.textContent = type.name;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading cost types:', error);
+            }
+        }
+
+        function showAddCostModal() {
+            showModal('addCostModal');
+        }
+
+        async function submitCost() {
+            const formData = {
+                type: document.getElementById('costType').value,
+                amount: parseFloat(document.getElementById('costAmount').value),
+                description: document.getElementById('costDescription').value
+            };
+
+            if (!formData.type || !formData.amount) {
+                showAlert('সকল আবশ্যক ক্ষেত্র পূরণ করুন', 'danger');
+                return;
+            }
+
+            try {
+                const result = await callGoogleScript('handleApiRequest', ['costs', 'POST', formData, currentUser.id, currentUser.role]);
+                
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    closeModal('addCostModal');
+                    clearForm('addCostForm');
+                    loadCosts();
+                    if (currentUser.role === 'superadmin') {
+                        loadDashboard();
+                    }
+                } else {
+                    showAlert(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Submit cost error:', error);
+                showAlert('খরচ যোগ করতে সমস্যা হয়েছে', 'danger');
+            }
+        }
+
+        // Driver Functions
+        function showAddDriverModal() {
+            showModal('addDriverModal');
+        }
+
+        async function submitDriver() {
+            const formData = {
+                name: document.getElementById('driverName').value,
+                mobile: document.getElementById('driverMobile').value
+            };
+
+            if (!formData.name) {
+                showAlert('ড্রাইভারের নাম আবশ্যক', 'danger');
+                return;
+            }
+
+            try {
+                const result = await callGoogleScript('handleApiRequest', ['drivers', 'POST', formData, currentUser.id, currentUser.role]);
+                
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    closeModal('addDriverModal');
+                    clearForm('addDriverForm');
+                    loadDriversForDropdown();
+                } else {
+                    showAlert(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Submit driver error:', error);
+                showAlert('ড্রাইভার যোগ করতে সমস্যা হয়েছে', 'danger');
+            }
+        }
+
+        // Profile Functions
+        async function loadProfile() {
+            try {
+                const result = await callGoogleScript('handleApiRequest', ['profile', 'GET', {userId: currentUser.id}, currentUser.id, currentUser.role]);
+                
+                if (result.success) {
+                    const data = result.data;
+                    
+                    // Update profile info
+                    const profileInfo = document.getElementById('userProfileInfo');
+                    profileInfo.innerHTML = `
+                        <div style="margin-bottom: 1rem;">
+                            <strong>নাম:</strong> ${data.user.name}
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>মোবাইল:</strong> ${data.user.mobile}
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>ভূমিকা:</strong> ${getRoleText(data.user.role)}
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>এনআইডি:</strong> ${data.user.nidNo || 'নেই'}
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>জন্ম তারিখ:</strong> ${data.user.dateOfBirth || 'নেই'}
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>মোট বকেয়া:</strong> ${formatCurrency(data.user.totalDue)}
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>চার্জ বিল:</strong> ${formatCurrency(data.monthlyStats.chargeBills)}
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>নো চার্জ বিল:</strong> ${formatCurrency(data.monthlyStats.noChargeBills)}
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>বাকি আদায়:</strong> ${formatCurrency(data.monthlyStats.dueCollections)}
+                        </div>
+                    `;
+
+                    // Update transactions table
+                    const transactionsTable = document.getElementById('userTransactionsTable');
+                    transactionsTable.innerHTML = '';
+                    
+                    data.transactions.forEach(transaction => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${transaction.id}</td>
+                            <td>${transaction.driverName}</td>
+                            <td>${transaction.chargeType === 'chargeBill' ? 'চার্জ বিল' : 'নো চার্জ বিল'}</td>
+                            <td>${formatCurrency(transaction.chargeAmount)}</td>
+                            <td>${transaction.createdAt}</td>
+                        `;
+                        transactionsTable.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Profile load error:', error);
+            }
+        }
+
+        // Reports Functions
+        async function handleGenerateReport(e) {
+            e.preventDefault();
+            
+            const startDate = document.getElementById('reportStartDate').value;
+            const endDate = document.getElementById('reportEndDate').value;
+
+            if (!startDate || !endDate) {
+                showAlert('শুরু এবং শেষ তারিখ নির্বাচন করুন', 'danger');
+                return;
+            }
+
+            try {
+                const result = await callGoogleScript('handleApiRequest', ['reports', 'GET', {
+                    reportType: 'custom',
+                    startDate: startDate,
+                    endDate: endDate
+                }, currentUser.id, currentUser.role]);
+                
+                if (result.success) {
+                    displayReport(result.data);
+                } else {
+                    showAlert(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Generate report error:', error);
+                showAlert('রিপোর্ট তৈরি করতে সমস্যা হয়েছে', 'danger');
+            }
+        }
+
+        function displayReport(data) {
+            const resultsDiv = document.getElementById('reportResults');
+            resultsDiv.innerHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <h3>রিপোর্ট - ${data.period}</h3>
+                        <button onclick="printReport()" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-print"></i>
+                            প্রিন্ট
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stats-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                                <div class="stats-card-value">${formatCurrency(data.totalSales)}</div>
+                                <div class="stats-card-label">মোট বিক্রয়</div>
+                            </div>
+                            <div class="stats-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                                <div class="stats-card-value">${formatCurrency(data.totalDue)}</div>
+                                <div class="stats-card-label">মোট বাকি</div>
+                            </div>
+                            <div class="stats-card" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                                <div class="stats-card-value">${formatCurrency(data.totalCost)}</div>
+                                <div class="stats-card-label">মোট খরচ</div>
+                            </div>
+                            <div class="stats-card" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
+                                <div class="stats-card-value">${formatCurrency(data.totalCash)}</div>
+                                <div class="stats-card-label">মোট নগদ</div>
+                            </div>
+                        </div>
+                        
+                        <h4>বিক্রয় সারসংক্ষেপ</h4>
+                        <div class="table-container mb-4">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ব্যবহারকারী</th>
+                                        <th>ড্রাইভার</th>
+                                        <th>ধরন</th>
+                                        <th>পরিমাণ</th>
+                                        <th>তারিখ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.salesSummary.map(sale => `
+                                        <tr>
+                                            <td>${sale.userName}</td>
+                                            <td>${sale.driverName}</td>
+                                            <td>${sale.chargeType === 'chargeBill' ? 'চার্জ বিল' : 'নো চার্জ বিল'}</td>
+                                            <td>${formatCurrency(sale.chargeAmount)}</td>
+                                            <td>${sale.createdAt}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h4>খরচ সারসংক্ষেপ</h4>
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ধরন</th>
+                                        <th>পরিমাণ</th>
+                                        <th>বিবরণ</th>
+                                        <th>তারিখ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.costSummary.map(cost => `
+                                        <tr>
+                                            <td>${cost.type}</td>
+                                            <td>${formatCurrency(cost.amount)}</td>
+                                            <td>${cost.description || '-'}</td>
+                                            <td>${cost.createdAt}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+            resultsDiv.classList.remove('hidden');
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        // Settings Functions
+        async function handlePasswordChange(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                showAlert('নতুন পাসওয়ার্ড মিলছে না', 'danger');
+                return;
+            }
+
+            if (newPassword.length !== 6 || !/^\d+$/.test(newPassword)) {
+                showAlert('পাসওয়ার্ড অবশ্যই ৬ ডিজিটের সংখ্যা হতে হবে', 'danger');
+                return;
+            }
+
+            try {
+                const result = await callGoogleScript('handleApiRequest', ['change-password', 'POST', {
+                    currentPassword: currentPassword,
+                    newPassword: newPassword
+                }, currentUser.id, currentUser.role]);
+                
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    clearForm('passwordForm');
+                } else {
+                    showAlert(result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Password change error:', error);
+                showAlert('পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে', 'danger');
+            }
+        }
+
+        // Utility Functions
+        async function callGoogleScript(functionName, parameters = []) {
+            return new Promise((resolve, reject) => {
+                google.script.run
+                    .withSuccessHandler(resolve)
+                    .withFailureHandler(reject)
+                    [functionName](...parameters);
+            });
+        }
+
+        function formatCurrency(amount) {
+            return '৳' + (amount || 0).toLocaleString('en-BD');
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-GB');
+        }
+
+        function getRoleText(role) {
+            const roles = {
+                'superadmin': 'সুপার অ্যাডমিন',
+                'manager': 'ম্যানেজার',
+                'user': 'ব্যবহারকারী'
+            };
+            return roles[role] || role;
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.getElementById('loginAlert');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            alertDiv.classList.remove('hidden');
+            
+            setTimeout(() => {
+                alertDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        function setLoading(buttonId, loading) {
+            const btn = document.getElementById(buttonId);
+            const text = btn.querySelector('#loginText');
+            const spinner = btn.querySelector('#loginSpinner');
+            
+            if (loading) {
+                text.classList.add('hidden');
+                spinner.classList.remove('hidden');
+                btn.disabled = true;
+            } else {
+                text.classList.remove('hidden');
+                spinner.classList.add('hidden');
+                btn.disabled = false;
+            }
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('open');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('open');
+        }
+
+        function clearForm(formId) {
+            document.getElementById(formId).reset();
+        }
+
+        function clearForms() {
+            document.querySelectorAll('form').forEach(form => form.reset());
+        }
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('passwordToggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            updateTheme();
+        }
+
+        function updateTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (isDarkMode) {
+                body.classList.add('dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                body.classList.remove('dark');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+        }
+
+        // Initialize Google Apps Script client
+        window.onload = function() {
+            // Try to initialize the database
+            callGoogleScript('initializeDatabase').catch(console.error);
+        };
+    </script>
+</body>
+</html>
