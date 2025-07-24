@@ -1,14 +1,14 @@
 {
-  "name": "bolt",
-  "description": "An AI Agent",
+  "name": "vehicle-management-system",
+  "description": "A comprehensive vehicle management system with role-based access",
   "private": true,
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
   "version": "1.0.0",
   "author": {
-    "name": "bolt.diy team",
-    "email": "maintainers@bolt.diy"
+    "name": "Vehicle Management Team",
+    "email": "admin@vehiclemanagement.com"
   },
   "scripts": {
     "deploy": "npm run build && wrangler pages deploy",
@@ -155,7 +155,14 @@
     "use-debounce": "^10.0.4",
     "vite-plugin-node-polyfills": "^0.22.0",
     "zod": "^3.24.1",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.3",
+    "googleapis": "^142.0.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "react-datepicker": "^4.25.0",
+    "react-select": "^5.8.0",
+    "xlsx": "^0.18.5",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "@blitz/eslint-plugin": "0.1.0",
@@ -176,6 +183,8 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/react-window": "^1.8.8",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.6",
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",

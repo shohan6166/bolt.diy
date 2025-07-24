@@ -1,103 +1,147 @@
-import { useStore } from '@nanostores/react';
-import type { LinksFunction } from '@remix-run/cloudflare';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
-import tailwindReset from '@unocss/reset/tailwind-compat.css?url';
-import { themeStore } from './lib/stores/theme';
-import { stripIndents } from './utils/stripIndent';
-import { createHead } from 'remix-island';
-import { useEffect } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { ClientOnly } from 'remix-utils/client-only';
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  LiveReload,
+  useLoaderData,
+  useLocation
+} from "@remix-run/react";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import reactToastifyStyles from 'react-toastify/dist/ReactToastify.css?url';
-import globalStyles from './styles/index.scss?url';
-import xtermStyles from '@xterm/xterm/css/xterm.css?url';
-
-import 'virtual:uno.css';
+// CSS imports
+import "./styles/global.css";
+import "./styles/components.css";
 
 export const links: LinksFunction = () => [
+  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
   {
-    rel: 'icon',
-    href: '/favicon.svg',
-    type: 'image/svg+xml',
-  },
-  { rel: 'stylesheet', href: reactToastifyStyles },
-  { rel: 'stylesheet', href: tailwindReset },
-  { rel: 'stylesheet', href: globalStyles },
-  { rel: 'stylesheet', href: xtermStyles },
-  {
-    rel: 'preconnect',
-    href: 'https://fonts.googleapis.com',
+    rel: "stylesheet",
+    href: "https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap",
   },
   {
-    rel: 'preconnect',
-    href: 'https://fonts.gstatic.com',
-    crossOrigin: 'anonymous',
-  },
-  {
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+    rel: "stylesheet", 
+    href: "https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@100;200;300;400;500;600;700;800;900&display=swap",
   },
 ];
 
-const inlineThemeCode = stripIndents`
-  setTutorialKitTheme();
+export async function loader({ request }: LoaderFunctionArgs) {
+  // Get theme from cookies or default to light
+  const cookieHeader = request.headers.get("Cookie");
+  const theme = cookieHeader?.includes("theme=dark") ? "dark" : "light";
+  const language = cookieHeader?.includes("language=en") ? "en" : "bn";
 
-  function setTutorialKitTheme() {
-    let theme = localStorage.getItem('bolt_theme');
-
-    if (!theme) {
-      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-
-    document.querySelector('html')?.setAttribute('data-theme', theme);
-  }
-`;
-
-export const Head = createHead(() => (
-  <>
-    <meta charSet="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <Meta />
-    <Links />
-    <script dangerouslySetInnerHTML={{ __html: inlineThemeCode }} />
-  </>
-));
+  return json({
+    theme,
+    language,
+    ENV: {
+      NODE_ENV: process.env.NODE_ENV,
+    },
+  });
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const theme = useStore(themeStore);
-
-  useEffect(() => {
-    document.querySelector('html')?.setAttribute('data-theme', theme);
-  }, [theme]);
-
+  const data = useLoaderData<typeof loader>();
+  
   return (
-    <>
-      <ClientOnly>{() => <DndProvider backend={HTML5Backend}>{children}</DndProvider>}</ClientOnly>
-      <ScrollRestoration />
-      <Scripts />
-    </>
+    <html lang={data?.language || "bn"} className={data?.theme || "light"}>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Vehicle Management System - যানবাহন ব্যবস্থাপনা সিস্টেম" />
+        <title>Vehicle Management System</title>
+        <Meta />
+        <Links />
+      </head>
+      <body className="min-h-screen bg-gray-50 dark:bg-gray-900 font-bengali">
+        <div id="root">
+          {children}
+        </div>
+        
+        {/* Toast notifications */}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme={data?.theme || "light"}
+          toastClassName="font-bengali"
+        />
+        
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
+        
+        {/* Global environment variables */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(data?.ENV)}`,
+          }}
+        />
+      </body>
+    </html>
   );
 }
 
-import { logStore } from './lib/stores/logs';
-
 export default function App() {
-  const theme = useStore(themeStore);
-
-  useEffect(() => {
-    logStore.logSystem('Application initialized', {
-      theme,
-      platform: navigator.platform,
-      userAgent: navigator.userAgent,
-      timestamp: new Date().toISOString(),
-    });
-  }, []);
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/login" || location.pathname === "/";
 
   return (
-    <Layout>
-      <Outlet />
-    </Layout>
+    <div className="min-h-screen">
+      {isLoginPage ? (
+        // Login page layout
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+          <Outlet />
+        </div>
+      ) : (
+        // Main application layout
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+          <Outlet />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Error boundary
+export function ErrorBoundary() {
+  return (
+    <html lang="bn" className="light">
+      <head>
+        <title>Error - Vehicle Management System</title>
+        <Meta />
+        <Links />
+      </head>
+      <body className="min-h-screen bg-gray-50 dark:bg-gray-900 font-bengali">
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Something went wrong!
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">
+              আমরা দুঃখিত, কিছু একটা ভুল হয়েছে। পেইজটি রিফ্রেশ করে চেষ্টা করুন।
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+            >
+              Refresh Page / পেইজ রিফ্রেশ করুন
+            </button>
+          </div>
+        </div>
+        <Scripts />
+      </body>
+    </html>
   );
 }
